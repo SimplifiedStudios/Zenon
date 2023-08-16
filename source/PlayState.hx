@@ -4,91 +4,64 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxSpriteGroup;
-import flixel.input.keyboard.FlxKey;
-import flixel.text.FlxText;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import objects.Cube;
-import objects.Player;
 
 class PlayState extends FlxState
 {
-	// * Physics Controller
+	// Player
 	var player:Player;
-	var weightCube:Cube;
-	// var gravityCube:Cube;
-	var cameraCube:FlxSprite;
-	var isGrounded = false;
 
-	// * Map Sprites
-	var Map:FlxSpriteGroup;
-	var ground:FlxSprite;
+	// Map
+	var map:FlxSpriteGroup = new FlxSpriteGroup();
+	var ground:CustomSprite;
+	var platform:CustomSprite;
 
 	override public function create()
 	{
-		super.create();
-
-		player = new Player();
-		player.create(50, FlxColor.WHITE);
-		player.acceleration.y = 250;
-		player.screenCenter();
+		player = new Player(50, FlxColor.WHITE);
 		add(player);
 
-		Map = new FlxSpriteGroup();
-
-		weightCube = new Cube();
-		weightCube.create(FlxColor.BLUE);
-		add(weightCube);
-
-		ground.screenCenter(X);
+		ground = new CustomSprite();
+		ground.makeGraphic(FlxG.width - 10, 30, FlxColor.GRAY);
 		ground.y = 600;
-		Map.add(ground);
+		ground.screenCenter(X);
+		ground.forceYPosition();
+		ground.forceXPosition();
+		ground.screenCenter(X);
+		map.add(ground);
 
-		add(Map);
-	}
+		platform = new CustomSprite();
+		platform.makeGraphic(300, 30, FlxColor.GRAY);
+		platform.y = 500;
+		platform.screenCenter(X);
+		platform.forceYPosition();
+		platform.forceXPosition();
 
-	public function groundCollision(Obj1:FlxSprite, Obj2:FlxSprite)
-	{
-		Obj1.acceleration.y = 0;
-		isGrounded = true;
+		map.add(platform);
+
+		add(map);
+
+		super.create();
 	}
 
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
-
-		ground.y = 600;
-
-		collisionController();
-		playerController();
+		collisionsController();
 	}
 
-	public function collisionController()
+	public function collisionsController()
 	{
-		FlxG.collide(player, ground, groundCollision);
-		FlxG.collide(weightCube, ground, groundCollision);
-	}
-
-	public function playerController()
-	{
-		if (FlxG.keys.anyJustPressed([FlxKey.SPACE]))
+		FlxG.collide(player, ground, function(obj:FlxSprite, oobj:FlxSprite)
 		{
-			if (isGrounded)
-			{
-				player.y -= 69;
-				isGrounded = false;
-			}
-		}
+			player.acceleration.y = 0;
+			player.isGrounded = true;
+		});
 
-		if (FlxG.keys.anyPressed([FlxKey.A]))
+		FlxG.collide(player, platform, function(obj:FlxSprite, oobj:FlxSprite)
 		{
-			player.x -= 10;
-		}
-
-		if (FlxG.keys.anyPressed([FlxKey.D]))
-		{
-			player.x += 10;
-		}
+			player.acceleration.y = 0;
+			player.isGrounded = true;
+		});
 	}
 }
