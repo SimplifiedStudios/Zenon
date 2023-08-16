@@ -15,6 +15,7 @@ class PlayState extends FlxState
 	var map:FlxSpriteGroup = new FlxSpriteGroup();
 	var ground:CustomSprite;
 	var platform:CustomSprite;
+	var platform1:CustomSprite;
 
 	override public function create()
 	{
@@ -33,9 +34,18 @@ class PlayState extends FlxState
 		platform = new CustomSprite();
 		platform.makeGraphic(300, 30, FlxColor.GRAY);
 		platform.y = 500;
-		platform.screenCenter(X);
+		platform.x += 300;
 		platform.forceYPosition();
 		platform.forceXPosition();
+
+		platform1 = new CustomSprite();
+		platform1.makeGraphic(300, 30, FlxColor.GRAY);
+		platform1.y = 500;
+		platform1.screenCenter(X);
+		platform1.x += 300;
+		platform1.forceYPosition();
+		platform1.forceYPosition();
+		add(platform1);
 
 		map.add(platform);
 
@@ -59,6 +69,12 @@ class PlayState extends FlxState
 		});
 
 		FlxG.collide(player, platform, function(obj:FlxSprite, oobj:FlxSprite)
+		{
+			player.acceleration.y = 0;
+			player.isGrounded = true;
+		});
+
+		FlxG.collide(player, platform1, function(obj:FlxSprite, oobj:FlxSprite)
 		{
 			player.acceleration.y = 0;
 			player.isGrounded = true;
