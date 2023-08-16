@@ -9,12 +9,14 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import objects.Cube;
+import objects.Player;
 
 class PlayState extends FlxState
 {
 	// * Physics Controller
-	var player:FlxSprite;
-	var weightCube:FlxSprite;
+	var player:Player;
+	var weightCube:Cube;
 	// var gravityCube:Cube;
 	var cameraCube:FlxSprite;
 	var isGrounded = false;
@@ -27,23 +29,18 @@ class PlayState extends FlxState
 	{
 		super.create();
 
-		player = new FlxSprite();
-		player.makeGraphic(50, 50, FlxColor.WHITE);
+		player = new Player();
+		player.create(50, FlxColor.WHITE);
 		player.acceleration.y = 250;
 		player.screenCenter();
 		add(player);
 
 		Map = new FlxSpriteGroup();
 
-		weightCube = new FlxSprite();
-		weightCube.makeGraphic(50, 50, FlxColor.BLUE);
-		weightCube.acceleration.y = 100;
-		weightCube.screenCenter(X);
-		weightCube.x += 100;
-		Map.add(weightCube);
+		weightCube = new Cube();
+		weightCube.create(FlxColor.BLUE);
+		add(weightCube);
 
-		ground = new FlxSprite();
-		ground.makeGraphic(FlxG.width - 50, 30, FlxColor.GRAY);
 		ground.screenCenter(X);
 		ground.y = 600;
 		Map.add(ground);
