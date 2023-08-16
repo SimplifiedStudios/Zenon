@@ -1,4 +1,4 @@
-package;
+package levels;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -10,13 +10,13 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 
-class PlayState extends FlxState
+class TestLevelWithCustomClass extends FlxState
 {
 	// * Physics Controller
 	var player:FlxSprite;
-	var weightCube:FlxSprite;
+	var weightCube:Cube;
 	// var gravityCube:Cube;
-	var cameraCube:FlxSprite;
+	var cameraCube:Cube;
 	var isGrounded = false;
 
 	// * Map Sprites
@@ -35,11 +35,8 @@ class PlayState extends FlxState
 
 		Map = new FlxSpriteGroup();
 
-		weightCube = new FlxSprite();
-		weightCube.makeGraphic(50, 50, FlxColor.BLUE);
-		weightCube.acceleration.y = 100;
-		weightCube.screenCenter(X);
-		weightCube.x += 100;
+		weightCube = new Cube(50, FlxColor.BLUE);
+		weightCube.screenCenter();
 		Map.add(weightCube);
 
 		ground = new FlxSprite();
