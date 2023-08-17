@@ -3,6 +3,7 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.input.keyboard.FlxKey;
+import flixel.text.FlxText;
 import flixel.util.FlxColor;
 
 class Player extends FlxSprite
@@ -12,6 +13,10 @@ class Player extends FlxSprite
 	var existingCharacter = false;
 
 	public var isGrounded = false;
+
+	public var objectGrabbed:Cube = null;
+
+	public var playerText:FlxText;
 
 	public function new(?scaleOfPlayer:Int, ?colorOfPlayer:FlxColor)
 	{
@@ -50,12 +55,23 @@ class Player extends FlxSprite
 			}
 		}
 
-		if (isGrounded == false)
+		// if (isGrounded == false)
+		// {
+		// 	if (existingCharacter)
+		// 	{
+		// 		acceleration.y = 250;
+		// 	}
+		// }
+
+		if (existingCharacter)
 		{
-			if (existingCharacter)
+			if (isGrounded == false)
 			{
 				acceleration.y = 250;
 			}
+
+			playerText.x = x + 3;
+			playerText.y = y - 50;
 		}
 	}
 
@@ -70,5 +86,6 @@ class Player extends FlxSprite
 		makeGraphic(scale, scale, color);
 		acceleration.y = 250;
 		existingCharacter = true;
+		playerText = new FlxText(0, 0, "You", 26);
 	}
 }

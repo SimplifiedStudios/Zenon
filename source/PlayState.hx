@@ -4,12 +4,15 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxSpriteGroup;
+import flixel.input.keyboard.FlxKey;
+import flixel.text.FlxText;
 import flixel.util.FlxColor;
 
 class PlayState extends FlxState
 {
 	// Player
 	var player:Player;
+	var weightCube:Cube;
 
 	// Map
 	var map:FlxSpriteGroup = new FlxSpriteGroup();
@@ -20,7 +23,12 @@ class PlayState extends FlxState
 	override public function create()
 	{
 		player = new Player(50, FlxColor.WHITE);
+		add(player.playerText); // This will add the name tag to the player indicating the player is you dumbass
 		add(player);
+
+		weightCube = new Cube();
+		weightCube.makeCube(50, FlxColor.BLUE);
+		add(weightCube);
 
 		ground = new CustomSprite();
 		ground.makeGraphic(FlxG.width - 10, 30, FlxColor.GRAY);
@@ -51,6 +59,11 @@ class PlayState extends FlxState
 
 		add(map);
 
+		// Main menu texts
+		var title = new FlxText(0, 50, "Zenon", 32);
+		title.screenCenter(X);
+		add(title);
+
 		super.create();
 	}
 
@@ -58,6 +71,27 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 		collisionsController();
+		objectPickupController();
+	}
+
+	public function objectPickupController()
+	{
+		if (FlxG.keys.anyPressed([FlxKey.Q]))
+		{
+			if (player.objectGrabbed != null)
+			{
+				player.objectGrabbed.drop();
+			}
+		}
+
+		FlxG.overlap(player, weightCube, function(obj:FlxSprite, oobj:Cube)
+		{
+			if (FlxG.keys.anyPressed([FlxKey.E]))
+			{
+				weightCube.grabOnto(player);
+				player.objectGrabbed = weightCube;
+			}
+		});
 	}
 
 	public function collisionsController()
@@ -78,6 +112,12 @@ class PlayState extends FlxState
 		{
 			player.acceleration.y = 0;
 			player.isGrounded = true;
+		});
+
+		FlxG.collide(weightCube, ground, function(obj:FlxSprite, oobj:FlxSprite)
+		{
+			weightCube.acceleration.y = 0;
+			weightCube.isGrounded = true;
 		});
 	}
 }
