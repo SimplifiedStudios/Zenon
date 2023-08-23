@@ -7,6 +7,7 @@ import flixel.group.FlxSpriteGroup;
 import flixel.input.keyboard.FlxKey;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
+import levels.PhysicsLabs;
 
 class PlayState extends FlxState
 {
@@ -20,6 +21,9 @@ class PlayState extends FlxState
 	var platform:CustomSprite;
 	var platform1:CustomSprite;
 
+	// * Menu Options
+	var play:CustomSprite;
+
 	override public function create()
 	{
 		player = new Player(50, FlxColor.WHITE);
@@ -29,6 +33,14 @@ class PlayState extends FlxState
 		weightCube = new Cube();
 		weightCube.makeCube(50, FlxColor.BLUE);
 		add(weightCube);
+
+		play = new CustomSprite();
+		play.makeGraphic(100, 100, FlxColor.RED);
+		play.screenCenter();
+		play.x -= 300;
+		play.forceXPosition();
+		play.forceYPosition();
+		add(play);
 
 		ground = new CustomSprite();
 		ground.makeGraphic(FlxG.width - 10, 30, FlxColor.GRAY);
@@ -52,7 +64,7 @@ class PlayState extends FlxState
 		platform1.screenCenter(X);
 		platform1.x += 300;
 		platform1.forceYPosition();
-		platform1.forceYPosition();
+		platform1.forceXPosition();
 		add(platform1);
 
 		map.add(platform);
@@ -118,6 +130,11 @@ class PlayState extends FlxState
 		{
 			weightCube.acceleration.y = 0;
 			weightCube.isGrounded = true;
+		});
+
+		FlxG.overlap(player, play, function(obj:FlxSprite, obj1:FlxSprite)
+		{
+			FlxG.switchState(new LevelLoader("Physics Labs", new PhysicsLab()));
 		});
 	}
 }

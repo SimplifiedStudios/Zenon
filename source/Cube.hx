@@ -10,7 +10,8 @@ class Cube extends FlxSprite
 	var existingCharacter = false;
 
 	//* Grabbing
-	var isGrabbed = false; // The start of our grabbing system
+	public var isGrabbed = false; // The start of our grabbing system
+
 	var grabbedSprite:FlxSprite;
 
 	public function new()
